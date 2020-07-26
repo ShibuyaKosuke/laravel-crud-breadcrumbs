@@ -1,0 +1,13 @@
+{
+  "name": "shibuyakosuke/laravel-crud-breadcrumbs",
+  "description": "Breadcrumbs for Laravel project",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "ShibuyaKosuke",
+      "email": "shibuya@imagenious.co.jp"
+    }
+  ],
+  "require": {}
+}
