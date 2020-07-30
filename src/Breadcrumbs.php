@@ -108,12 +108,17 @@ class Breadcrumbs
     public function render()
     {
         $this->buildCrumb(\Route::currentRouteName());
-        $breadcrumbs = $this->current;
-        return $this->view->make($this->config->get('breadcrumbs.view'), compact('breadcrumbs'));
+        if ($breadcrumbs = $this->current) {
+            return $this->view->make(
+                $this->config->get('breadcrumbs.view'),
+                compact('breadcrumbs')
+            );
+        }
     }
 
     /**
      * @param $route
+     * @throws DefinitionNotFoundException
      */
     protected function buildCrumb($route): void
     {

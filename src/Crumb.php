@@ -50,8 +50,17 @@ class Crumb
     }
 
     /**
+     * @param $name
+     * @param $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        return $this->__get($name);
+    }
+
+    /**
      * Set properties
-     * @param string $route
      * @param string $title
      * @param string $url
      */
