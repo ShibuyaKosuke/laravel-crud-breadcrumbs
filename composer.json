@@ -28,9 +28,7 @@
       }
     }
   },
-  "require": {},
-  "conflict": [
-    "davejamesmiller/laravel-breadcrumbs:*",
-    "watson/breadcrumbs:*"
-  ]
+  "require": {
+
+  }
 }
