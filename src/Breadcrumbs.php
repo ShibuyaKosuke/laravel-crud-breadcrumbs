@@ -4,7 +4,11 @@ namespace ShibuyaKosuke\LaravelCrudBreadcrumbs;
 
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
+use ShibuyaKosuke\LaravelCrudBreadcrumbs\Exceptions\DefinitionAlreadyExistsException;
+use ShibuyaKosuke\LaravelCrudBreadcrumbs\Exceptions\DefinitionNotFoundException;
 
 /**
  * Class Breadcrumbs
@@ -56,25 +60,26 @@ class Breadcrumbs
     /**
      * Register a breadcrumb definition by passing it off to the registrar.
      *
-     * @param string $route
+     * @param string $name
      * @param Closure $definition
      * @return void
+     * @throws DefinitionAlreadyExistsException
      */
-    public function for(string $route, Closure $definition)
+    public function for(string $name, Closure $definition): void
     {
-        if (isset($this->callbacks[$route])) {
-            return;
+        if (isset($this->callbacks[$name])) {
+            throw new DefinitionAlreadyExistsException();
         }
-        $this->callbacks[$route] = $definition;
+        $this->callbacks[$name] = $definition;
 
-        $this->add($route);
+        $this->add($name);
     }
 
     /**
      * Add to breadcrumbs
      * @param string $route
      */
-    public function add(string $route)
+    public function add(string $route): void
     {
         $trail = new Crumb($route);
         $this->breadcrmbs->put($route, $trail);
@@ -91,31 +96,47 @@ class Breadcrumbs
 
     /**
      * @param $route
-     * @return Crumb
+     * @return Crumb|null
      */
-    public function get($route): Crumb
+    public function get($route)
     {
         return $this->breadcrmbs->get($route);
     }
 
     /**
-     * @return Crumb[]
      */
     public function render()
     {
-        $route = \Route::currentRouteName();
-        $this->buildCrumb($route);
-        return $this->current;
+        $this->buildCrumb(\Route::currentRouteName());
+        $breadcrumbs = $this->current;
+        return $this->view->make($this->config->get('breadcrumbs.view'), compact('breadcrumbs'));
     }
 
-    private function buildCrumb($route)
+    /**
+     * @param $route
+     */
+    protected function buildCrumb($route): void
     {
-        $params = [];
-        $crumb = $this->get($route);
-        $this->callbacks[$route]($crumb, $params);
+        $crumb = $this->call($route);
         $this->current->prepend($crumb);
         if ($crumb->parent) {
             $this->buildCrumb($crumb->parent->route);
         }
+    }
+
+    /**
+     * @param $route
+     * @return Crumb
+     */
+    protected function call($route): Crumb
+    {
+        $params = [];
+        $crumb = $this->get($route);
+        if (!isset($this->callbacks[$route])) {
+            throw new DefinitionNotFoundException();
+        }
+        $callback = $this->callbacks[$route];
+        $callback($crumb, $params);
+        return $crumb;
     }
 }
