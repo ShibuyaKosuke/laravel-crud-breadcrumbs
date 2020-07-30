@@ -1,6 +1,10 @@
 {
   "name": "shibuyakosuke/laravel-crud-breadcrumbs",
   "description": "Breadcrumbs for Laravel project",
+  "keywords": [
+    "laravel",
+    "breadcrumbs"
+  ],
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -24,5 +28,9 @@
       }
     }
   },
-  "require": {}
+  "require": {},
+  "conflict": [
+    "davejamesmiller/laravel-breadcrumbs:*",
+    "watson/breadcrumbs:*"
+  ]
 }
