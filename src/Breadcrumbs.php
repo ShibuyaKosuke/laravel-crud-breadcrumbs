@@ -5,6 +5,7 @@ namespace ShibuyaKosuke\LaravelCrudBreadcrumbs;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use ShibuyaKosuke\LaravelCrudBreadcrumbs\Exceptions\DefinitionAlreadyExistsException;
@@ -16,6 +17,13 @@ use ShibuyaKosuke\LaravelCrudBreadcrumbs\Exceptions\DefinitionNotFoundException;
  */
 class Breadcrumbs
 {
+    /**
+     * The view factory.
+     *
+     * @var \Illuminate\Contracts\Routing\Registrar
+     */
+    protected $router;
+
     /**
      * The view factory.
      *
@@ -51,6 +59,7 @@ class Breadcrumbs
      */
     public function __construct(Application $app)
     {
+        $this->router = $app->router;
         $this->view = $app->view;
         $this->config = $app->config;
         $this->breadcrmbs = collect();
@@ -132,16 +141,34 @@ class Breadcrumbs
     /**
      * @param $route
      * @return Crumb
+     * @throws DefinitionNotFoundException
      */
     protected function call($route): Crumb
     {
-        $params = [];
+        /** @var Crumb $crumb */
         $crumb = $this->get($route);
+
+        /** @var array $parameters */
+        $parameters = ($route = $this->router->current()) ? $route->parameters : [];
+
+        call_user_func_array(
+            $this->getDefinition($route),
+            Arr::prepend(array_values($parameters), $crumb)
+        );
+
+        return $crumb;
+    }
+
+    /**
+     * @param $route
+     * @return Closure
+     * @throws DefinitionNotFoundException
+     */
+    protected function getDefinition($route)
+    {
         if (!isset($this->callbacks[$route])) {
             throw new DefinitionNotFoundException();
         }
-        $callback = $this->callbacks[$route];
-        $callback($crumb, $params);
-        return $crumb;
+        return $this->callbacks[$route];
     }
 }
