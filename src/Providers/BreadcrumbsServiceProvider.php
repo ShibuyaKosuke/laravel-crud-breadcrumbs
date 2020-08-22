@@ -25,14 +25,19 @@ class BreadcrumbsServiceProvider extends ServiceProvider implements DeferrablePr
             __DIR__ . '/../config/breadcrumbs.php', 'breadcrumbs'
         );
 
-        $this->loadViewsFrom(__DIR__.'/../views', 'breadcrumbs');
+        $this->loadViewsFrom(__DIR__ . '/../views', 'breadcrumbs');
 
         $this->registerClass();
+
+        $this->publishes([
+            __DIR__ . '/../config/breadcrumbs.php' => config_path('breadcrumbs.php'),
+            __DIR__ . '/../views' => resource_path('views/vendor/breadcrumbs'),
+        ], 'breadcrumbs');
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/breadcrumbs.php', 'breadcrumbs');
+        $this->mergeConfigFrom(__DIR__ . '/../config/breadcrumbs.php', 'breadcrumbs');
         $this->app->singleton(Breadcrumbs::class, Breadcrumbs::class);
     }
 
