@@ -21,6 +21,8 @@ php artisan vendor:publish --tag=breadcrumbs
 Create a new file at routes/breadcrumbs.php to define your breadcrumbs. By default the package will work with named routes which works with resourceful routing. However, you're also free to define routes by the controller action/pair.
 
 ```php
+use App\Models\User;
+
 Breadcrumbs::for('home', function ($trail) {
     $trail->add('Home', route('home'));
 });
