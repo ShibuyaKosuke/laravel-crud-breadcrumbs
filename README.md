@@ -1,6 +1,6 @@
 # laravel-crud-breadcrumbs
 
-Breadcrumbs package for php7+
+Breadcrumbs package for Laravel7+
 
 inspired by [dwightwatson/breadcrumbs](https://github.com/dwightwatson/breadcrumbs)
 
