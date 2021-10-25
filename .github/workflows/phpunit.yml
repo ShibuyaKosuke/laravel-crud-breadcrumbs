@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        php: [8.0,8.1]
+        php: [7.4,8.0,8.1]
 
     name: PHP ${{ matrix.php }}
 
@@ -27,6 +27,3 @@ jobs:
 
       - name: code sniffer
         run: ./vendor/bin/phpcs --standard=phpcs.xml ./
-
-      - name: Execute tests
-        run: ./vendor/bin/testbench package:test --parallel
