@@ -24,6 +24,3 @@ jobs:
 
       - name: Install dependencies
         run: composer update --prefer-dist --no-interaction --no-suggest
-
-      - name: code sniffer
-        run: ./vendor/bin/phpcs --standard=phpcs.xml ./

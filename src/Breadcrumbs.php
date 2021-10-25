@@ -6,7 +6,6 @@ use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 use ShibuyaKosuke\LaravelCrudBreadcrumbs\Exceptions\DefinitionAlreadyExistsException;
 use ShibuyaKosuke\LaravelCrudBreadcrumbs\Exceptions\DefinitionNotFoundException;
 
@@ -86,6 +85,7 @@ class Breadcrumbs
     /**
      * Add to breadcrumbs
      * @param string $route
+     * @return void
      */
     public function add(string $route): void
     {
@@ -95,7 +95,7 @@ class Breadcrumbs
 
     /**
      * @param string $route
-     * @return bool
+     * @return boolean
      */
     public function has(string $route): bool
     {
@@ -103,10 +103,10 @@ class Breadcrumbs
     }
 
     /**
-     * @param $route
+     * @param string $route
      * @return Crumb|null
      */
-    public function get($route)
+    public function get(string $route)
     {
         return $this->breadcrmbs->get($route);
     }
@@ -127,7 +127,8 @@ class Breadcrumbs
     }
 
     /**
-     * @param $route
+     * @param string $route
+     * @return void
      * @throws DefinitionNotFoundException
      */
     protected function buildCrumb(string $route): void
@@ -140,11 +141,11 @@ class Breadcrumbs
     }
 
     /**
-     * @param $route
+     * @param string $route
      * @return Crumb
      * @throws DefinitionNotFoundException
      */
-    protected function call($route): Crumb
+    protected function call(string $route): Crumb
     {
         /** @var Crumb $crumb */
         $crumb = $this->get($route);
@@ -161,7 +162,7 @@ class Breadcrumbs
     }
 
     /**
-     * @param $route
+     * @param string $route
      * @return Closure
      * @throws DefinitionNotFoundException
      */

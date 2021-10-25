@@ -22,7 +22,8 @@ class BreadcrumbsServiceProvider extends ServiceProvider implements DeferrablePr
     public function boot()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/breadcrumbs.php', 'breadcrumbs'
+            __DIR__ . '/../config/breadcrumbs.php',
+            'breadcrumbs'
         );
 
         $this->loadViewsFrom(__DIR__ . '/../views', 'breadcrumbs');
